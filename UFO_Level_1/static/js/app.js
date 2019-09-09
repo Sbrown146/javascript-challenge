@@ -1,7 +1,7 @@
 // Javascript Homework.  Scott Brown 
-//      ALIENS!!!!
+//      ALIENS!!!!  with Combinations!
 
-// This and the index.html in the UFO_Level_1 folder contain both the required and optional code.  However, a working loop that uses all available search fields was tested in the UFO_Level_2 folder using queries in javascript.  I kept the code here as a proof of concept that a proper search can be done by using elementary loop combinations as long as there are only a few search fields available.
+// This and the index.html in the UFO_Level_1 folder contains both the required and optional code.  However, a working loop that uses all available search fields is in the UFO_Level_2 folder using queries in javascript (use the query in UFO_Level_2 for grading -> 200 lines of code vs 400+ lines of code here).  I kept this code here as a proof of concept that a proper search can be done by using elementary loop combinations as long as there are only a few search fields available.
 
 // This method would not be recommended using more than 3 fields due to the following combinations needing code:
 
@@ -11,7 +11,8 @@
 //  6 search fields :  2^6 = 64 combinations
 //  7 search fields :  2^7 = 128 combinations
 
-// I would rather try to brute force a query loop to cover all 7 search fields than bash my head coding all 128 combinations.  Ironically, I ended up coding out all 32 combinations using the 5 search fields to have a working final product due to the countless issues using the array.prototype.filter() within the query (the syntax turned out to be an absolute nightmare compared to the syntax used here).  This code, despite its grotesque length, only took about 6 hours to complete and get working properly (personal best for a homework assignment so far though issues with the dropdown menu added 3+ hours to it) due to its rather simplistic syntax (I am sure there is a more efficient way but for the time being, it works!).  The query in UFO_Level_2 on the other hand.....
+// I ended up coding out all 32 combinations for the 5 search fields in this code in case I could not get the query to work properly to have a final product to turn it.  Despite its grotesque length, this way only took about 5 hours to code and test while the query easily took double that amount of time to get working properly due to the syntax being rather over my head at times and  frustrating to find references for online.  
+
 
 
 
@@ -70,12 +71,6 @@ console.log("Welcome! Browse data or make a selection.");
 
 
 
-// This is a workaround for the shape dropdown menu.  input_variable5.property("value") for shape in the dropdown list was giving its position on the dropdown list rather than its value.  This just matches the shape choice with its position in the shape_options array so the correct value is given.  I also had to split it into two arrays as only positions 0-9 could be properly called this way.  There is a much better way to do this using property("value") or something similar I'm sure but after 2 hours of attempts and no progress, this was the only method to work properly.
-
-var shape_options1=["", "light", "circle", "triangle", "unknown", "fireball", "formation", "other", "sphere", "disk"] 
-var shape_options2=["chevron", "rectangle", "flash", "changing", "oval", "cigar", "teardrop", "cylinder"]
-
-
 // Search Sightings Button
 search_button.on("click", function(){
 
@@ -92,19 +87,9 @@ search_button.on("click", function(){
     var input_variable_country=input_variable4.property("value").toLowerCase().trim();
     var input_variable_country_filter=data.filter(data=>data.country===input_variable_country);
 
-    var shape_parameter=input_variable5.property("value");
-    
-    // This gives the value for the position given with the shape_parameter variable.  Subtracts 10 for any input_variable_shape position values over 10 to properly utilize the second array shape_options2.
-    
-    if (shape_parameter < 10){
-        var input_variable_shape=shape_options1[shape_parameter[0]];
-    }
-    else {
-        var shape_holder=(shape_parameter-10);
-        var input_variable_shape=shape_options2[shape_holder];
-    };
-    
-   
+    var input_variable_shape=input_variable5.property("value");
+    var input_variable_shape_filter=data.filter(data=>data.shape===input_variable_shape);
+
 
 
 
@@ -448,8 +433,5 @@ search_button.on("click", function(){
                     else{
                         table_row.append("tr").append("td").text("Your search yielded no results.  Please search again.")
                         console.log("Your search yielded no results.  Please search again.");
-                        console.log(input_variable_shape);
-                        console.log(shape_parameter);
-                        console.log(shape_holder);
                     }
 })
