@@ -39,6 +39,7 @@ var $search_shape=document.querySelector(".search-shape");
 var $search_duration=document.querySelector(".search-duration");
 var $search_comments=document.querySelector(".search-comments");
 var $search_fail=document.querySelector(".search-fail");
+var $search_reset=document.querySelector(".search-reset");
 
 
 
@@ -78,7 +79,8 @@ console.log("Welcome! Browse data or make a selection.");
 function Hard_Reset(){
     $table_body.innerHTML="";
 
-    $search_log.innerHTML="Table has been reset.";
+    $search_log.innerHTML="";
+    $search_reset.innerHTML="Table has been reset.";
     $search_date.innerHTML="";
     $search_city.innerHTML="";
     $search_state.innerHTML="";
@@ -119,6 +121,7 @@ function Initiate_Search_Button(){
     $search_duration.innerHTML="";
     $search_comments.innerHTML="";
     $search_fail.innerHTML="";
+    $search_reset.innerHTML="";
 
     // Search variables
     var input_variable_date=$input_variable1.value.trim();
@@ -248,7 +251,7 @@ function Initiate_Search_Button(){
         Initiate_table();
 
         if ($table_check.length<1){
-            $search_fail.append("No results found.");
+            $search_fail.append("No matches found.");
         }
 
         Temp_data_holder=data;
