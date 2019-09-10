@@ -2,20 +2,14 @@
 //      ALIENS!!!!  with Queries!
 
 
-// This is the homework working properly using queries.  Nice to see the program being able to do everything that the combination program in UFO_Level_1 can do and more in less than half the code.  However, like all things in life, there are no solutions.  Only tradeoffs.  This code is limited by 2 issues that I could not find resolutions for:
-
-// 1) All fields blank after a single search meaning all fields have to be entered in again.  This did not occur in the Combination program.
-
-// 2) A 'no results found' entry at the end of the loop that was appended to the table would not remove properly upon a new search so it went unused.  This was not an issue with the Combination program.
-
-
-// Ultimately minor complaints considering everything that was required appears to be working correctly.
+// This is the homework working properly using queries.  Nice to see the program being able to do everything that the combination program in UFO_Level_1 can do and more in less than half the code though it ended up taking much, much more time due to the brickwall that is always in my way (aka figuring out the syntax).
 
 
 
 
 // Table and button declarations
 var $table_body=document.querySelector('tbody');
+var $table_check=document.querySelector('tbody').rows;
 var $reset_button=document.querySelector('#reset-btn');
 var $search_button=document.querySelector('#filter-btn');
 
@@ -35,7 +29,7 @@ $search_button.addEventListener('click', Initiate_Search_Button);
 $reset_button.addEventListener('click', Hard_Reset);
 
 
-// Variables for the search log above the table
+// Variables for the search log next to the table.
 var $search_log=document.querySelector(".search");
 var $search_date=document.querySelector(".search-date");
 var $search_city=document.querySelector(".search-city");
@@ -44,6 +38,7 @@ var $search_country=document.querySelector(".search-country");
 var $search_shape=document.querySelector(".search-shape");
 var $search_duration=document.querySelector(".search-duration");
 var $search_comments=document.querySelector(".search-comments");
+var $search_fail=document.querySelector(".search-fail");
 
 
 
@@ -69,6 +64,7 @@ function Initiate_table(){
     }
 }
 
+
 // This load the table when the page is first opened/refreshed.
 Initiate_table();
 console.log("Welcome! Browse data or make a selection.");
@@ -82,7 +78,7 @@ console.log("Welcome! Browse data or make a selection.");
 function Hard_Reset(){
     $table_body.innerHTML="";
 
-    $search_log.innerHTML="";
+    $search_log.innerHTML="Table has been reset.";
     $search_date.innerHTML="";
     $search_city.innerHTML="";
     $search_state.innerHTML="";
@@ -90,6 +86,7 @@ function Hard_Reset(){
     $search_shape.innerHTML="";
     $search_duration.innerHTML="";
     $search_comments.innerHTML="";
+    $search_fail.innerHTML="";
 
     Temp_data_holder=data;
 
@@ -121,7 +118,9 @@ function Initiate_Search_Button(){
     $search_shape.innerHTML="";
     $search_duration.innerHTML="";
     $search_comments.innerHTML="";
+    $search_fail.innerHTML="";
 
+    // Search variables
     var input_variable_date=$input_variable1.value.trim();
     var input_variable_city=$input_variable2.value.toLowerCase().trim();
     var input_variable_state=$input_variable3.value.toLowerCase().trim();
@@ -129,6 +128,16 @@ function Initiate_Search_Button(){
     var input_variable_shape=$input_variable5.value;
     var input_variable_duration=$input_variable6.value.toLowerCase().trim();
     var input_variable_comments=$input_variable7.value;
+
+
+    // This is the default if no search criteria is entered and the search button is pushed.
+
+    if (input_variable_date==="" && input_variable_city==="" && input_variable_state==="" && input_variable_country==="" && input_variable_shape==="" && input_variable_duration==="" && input_variable_comments===""){
+        Initiate_table();
+        $search_log.innerHTML="Search Includes:";
+        $search_date.append("No search criteria entered.  Please search again.");
+        return $table_body.innerHTML="";
+    } 
 
 
     // Loops to filter data for matching date, city, state, country, shape, duration and comments.
@@ -174,7 +183,7 @@ function Initiate_Search_Button(){
     }
 
 
-    // Finally!  Both duration and comments are set to search their respective fields, not match them due to their uneven formatting.  This simple task.....took WAY too much time to get to work.  However, success was achieved when I realized that input_variable_duration_filter appears to return an object (or something that is neither an array or string) and thus has to be reformatted to use something like string.prototype.includes().  After that breakthrough, both now work properly.
+    // Finally!  Both duration and comments are set to search their respective fields, not match them due to their uneven formatting.  This simple task.....took WAY too much time to get to work.  However, success was achieved when I realized that input_variable_duration_filter appears to return an object (or something that is neither an array or string) and thus has to be reformatted as a string to use something like string.prototype.includes().  After that breakthrough, both now work properly.
 
 
     // Duration
@@ -192,10 +201,11 @@ function Initiate_Search_Button(){
             var input_variable_comments_filter=get_comments.comments;
             var input_variable_comments_match=new String(input_variable_comments_filter);
             return input_variable_comments_match.includes(input_variable_comments);
-        })
+        });
     }
 
-    // Originally, console.log(`   selected: ${input_variable_   }`) was included in each of the loops above to display which values were entered.  However, they would end up being displayed for each iteration through the loop (usually 10+ times).  They are put down here to only be displayed once in the log.  A search log is also added to the top of the table.
+
+    // Originally, console.log(`   selected: ${input_variable_   }`) was included in each of the loops above to display which values were entered.  However, they would end up being displayed for each iteration through the loop (usually 10+ times).  They are put down here to only be displayed once in the log.  A search log is also added next to the table.
 
         if (input_variable_date!=""){
             $search_date.append((`Date selected:  ${input_variable_date}`));
@@ -232,20 +242,15 @@ function Initiate_Search_Button(){
             console.log(`Comments selected: ${input_variable_comments}`);
         }
 
-
-        // This was to display text whenever a search did not meet the above criteria.  While it works, I could not get a way for it to be properly removed after another search or get the else condition to proc correctly.
-
-
-        // else {
-        //     $table_body.append("Your search yielded no results.  Please search again.");
-        //     console.log("Your search yielded no results.  Please search again.");
-        // }
-
-
-
-        // This initiates the table based on search criteria.  Also blanks all variables so there are no holdovers for another search.
+        
+        // This initiates the table based on search criteria.  Also blanks all variables so there are no holdovers for another search.  Added a "no results found" if no matching criteria is found.
 
         Initiate_table();
+
+        if ($table_check.length<1){
+            $search_fail.append("No results found.");
+        }
+
         Temp_data_holder=data;
         $input_variable1.value="";
         $input_variable2.value="";
@@ -254,6 +259,7 @@ function Initiate_Search_Button(){
         $input_variable5.value="";
         $input_variable6.value="";
         $input_variable7.value="";
+
     };
 
     
